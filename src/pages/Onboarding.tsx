@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { BackupImportControl } from '@/components/BackupImportControl'
 import { PayDaySelect } from '@/components/PayDaySelect'
 import { useLedger } from '@/context/LedgerContext'
 import { CURRENCIES } from '@/lib/types'
@@ -97,6 +98,11 @@ export function Onboarding() {
         >
           Preview with sample data
         </button>
+        <BackupImportControl
+          label="Load from a backup file"
+          className="mt-2 h-12 w-full rounded-2xl text-sm font-medium text-muted-foreground"
+          confirmReplace={false}
+        />
       </section>
     </div>
   )

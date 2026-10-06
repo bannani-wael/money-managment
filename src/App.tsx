@@ -137,6 +137,7 @@ export default function App() {
           setMonth(cycleKey(new Date(), payDay))
           setSettingsOpen(false)
         }}
+        onImported={(next) => setMonth(cycleKey(new Date(), next.settings.payDay || 28))}
       />
       <ConfirmDialog
         open={Boolean(pendingDelete)}

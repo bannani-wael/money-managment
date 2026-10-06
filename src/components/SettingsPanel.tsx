@@ -1,6 +1,9 @@
 import { Moon, Sun } from 'lucide-react'
+import { BackupImportControl } from '@/components/BackupImportControl'
 import { PayDaySelect } from '@/components/PayDaySelect'
 import { useLedger } from '@/context/LedgerContext'
+import { downloadBackup } from '@/lib/backup'
+import type { LedgerState } from '@/lib/types'
 import { CURRENCIES } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
@@ -8,10 +11,12 @@ export function SettingsPanel({
   open,
   onClose,
   onLoadDemo,
+  onImported,
 }: {
   open: boolean
   onClose: () => void
   onLoadDemo: () => void
+  onImported?: (state: LedgerState) => void
 }) {
   const { state, dispatch, theme, setTheme } = useLedger()
 
@@ -111,19 +116,20 @@ export function SettingsPanel({
           </button>
           <button
             type="button"
-            onClick={() => {
-              const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' })
-              const url = URL.createObjectURL(blob)
-              const link = document.createElement('a')
-              link.href = url
-              link.download = 'folio-backup.json'
-              link.click()
-              URL.revokeObjectURL(url)
-            }}
+            onClick={() => downloadBackup(state)}
             className="h-12 rounded-2xl bg-secondary font-medium"
           >
             Export backup
           </button>
+          <BackupImportControl
+            label="Load from backup"
+            className="h-12 w-full rounded-2xl bg-secondary font-medium"
+            confirmReplace
+            onSuccess={(next) => {
+              onImported?.(next)
+              onClose()
+            }}
+          />
           <button
             type="button"
             onClick={() => {
